@@ -37,10 +37,12 @@ void loop() {
   if (client) {
     Serial.println("new client");
     String currentLine = "";
-    while (client.connected()) {
+    unsigned long timeout = millis();
+    while (client.connected() && millis() - timeout < 2000) {
       if (client.available()) {
         char c = client.read();
         Serial.write(c);
+        timeout = millis();
         if (c == '\n') {
           if (currentLine.length() == 0) {
             client.println("HTTP/1.1 200 OK");
